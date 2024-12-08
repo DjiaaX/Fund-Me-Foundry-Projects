@@ -30,21 +30,21 @@ contract FundMetest is Test {
     //     console.log(msg.sender);
     //     assertEq(fundMe.i_owner(), msg.sender);
     // }
-    function testOwnerIsMsgSender() public view{
+    function testOwnerIsMsgSender() public view {
         assertEq(fundMe.getOwner(), msg.sender);
     }
 
-    function testPriceFeedVersionIsAccurate() public view{
+    function testPriceFeedVersionIsAccurate() public view {
         // uint256 version = fundMe.getVersion();
         // assertEq(version, 6);
         uint256 version = fundMe.getVersion();
         console.log("Price feed version: ", version);
 
         if (block.chainid == 1) {
-        // Mainnet
+            // Mainnet
             assertEq(version, 6);
         } else if (block.chainid == 11155111) {
-        // Sepolia
+            // Sepolia
             assertEq(version, 4);
         } else if (block.chainid == 31337) {
             assertEq(version, 4);
@@ -72,11 +72,11 @@ contract FundMetest is Test {
 
         address funder = fundMe.getFunder(0);
         assertEq(funder, USER);
-    }   
+    }
 
     modifier funded() {
         vm.prank(USER);
-        fundMe.fund{value: SEND_VALUE}();   
+        fundMe.fund{value: SEND_VALUE}();
         _;
     }
 
@@ -94,7 +94,6 @@ contract FundMetest is Test {
         // Act
         vm.prank(fundMe.getOwner());
         fundMe.withdraw();
-
 
         // Assert
         uint256 endingOwnerBalance = fundMe.getOwner().balance;
@@ -121,10 +120,7 @@ contract FundMetest is Test {
         uint256 endingOwnerBalance = fundMe.getOwner().balance;
         uint256 endingFundMeBalance = address(fundMe).balance;
         assertEq(endingFundMeBalance, 0);
-        assertEq(
-            startingFundMeBalance + startingOwnerBalance,
-            endingOwnerBalance
-        );
+        assertEq(startingFundMeBalance + startingOwnerBalance, endingOwnerBalance);
     }
 
     function testWithdrawFromMultiperFundersCheaper() public funded {
@@ -145,9 +141,6 @@ contract FundMetest is Test {
         uint256 endingOwnerBalance = fundMe.getOwner().balance;
         uint256 endingFundMeBalance = address(fundMe).balance;
         assertEq(endingFundMeBalance, 0);
-        assertEq(
-            startingFundMeBalance + startingOwnerBalance,
-            endingOwnerBalance
-        );
+        assertEq(startingFundMeBalance + startingOwnerBalance, endingOwnerBalance);
     }
 }
